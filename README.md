@@ -58,6 +58,34 @@ FoodAppFullStack
 │
 └── README.md
 ```
+## 📸 Project Screenshots
+
+### 🏠 Home Page
+![Home Page](screenshots/Home.png)
+
+### 🔐 User Sign In
+![Sign In](screenshots/Sign-In.png)
+
+### 📝 User Registration
+![Register User](screenshots/Register-User.png)
+
+### 🛒 Shopping Cart
+![Cart Section](screenshots/Cart-Section.png)
+
+### 💳 Payment Page
+![Payment Section](screenshots/Payment-Section.png)
+
+### 📦 User Orders
+![Order Section User](screenshots/Order-Section-User.png)
+
+### ➕ Admin - Add Food
+![Add Food Admin](screenshots/Add-Food-Admin.png)
+
+### 📋 Admin - Food List
+![List Food Admin](screenshots/List-food-Section-Admin.png)
+
+### 🚚 Admin - Order Management
+![Admin Order Status](screenshots/Admin-Order-Status.png)
 
 ---
 
