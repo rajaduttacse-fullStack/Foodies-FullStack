@@ -5,6 +5,8 @@
 ![React](https://img.shields.io/badge/React-19-blue)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 ![JWT](https://img.shields.io/badge/JWT-Authentication-purple)
+![AWS S3](https://img.shields.io/badge/AWS-S3-orange)
+![Razorpay](https://img.shields.io/badge/Razorpay-Payment-blue)
 ![Maven](https://img.shields.io/badge/Maven-Build-red)
 ![Git](https://img.shields.io/badge/Git-Version_Control-orange)
 ![GitHub](https://img.shields.io/badge/GitHub-Repository-black)
