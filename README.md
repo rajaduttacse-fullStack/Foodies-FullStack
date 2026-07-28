@@ -1,5 +1,14 @@
 # 🍔 Foodies - Full Stack Food Ordering Application
 
+![Java](https://img.shields.io/badge/Java-21-orange)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen)
+![React](https://img.shields.io/badge/React-19-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
+![JWT](https://img.shields.io/badge/JWT-Authentication-purple)
+![Maven](https://img.shields.io/badge/Maven-Build-red)
+![Git](https://img.shields.io/badge/Git-Version_Control-orange)
+![GitHub](https://img.shields.io/badge/GitHub-Repository-black)
+
 ## 📌 Project Overview
 
 Foodies is a full-stack food ordering web application where users can browse food items, add them to the cart, place orders, and administrators can manage food items and orders.
