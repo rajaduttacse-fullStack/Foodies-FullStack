@@ -18,33 +18,46 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     @Autowired
-    private JwtUtil jwtUtil ;
+    private JwtUtil jwtUtil;
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-       final String authHeader = request.getHeader("Authorization");
-       if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
-           String token = authHeader.substring(7);
-           String email  = jwtUtil.extractUsername(token);
-           if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-               UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        try {
+            final String authHeader = request.getHeader("Authorization");
 
-               if(jwtUtil.validateToken(token , userDetails)){
-                   UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                           userDetails , null , userDetails.getAuthorities()
-                   );
+            if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
 
-                   authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                   SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-               }
+                // Prevent crashes if React sends "Bearer null" or "Bearer undefined"
+                if (!token.equals("null") && !token.equals("undefined")) {
+                    String email = jwtUtil.extractUsername(token);
 
-           }
-       }
-        filterChain.doFilter(request , response);
+                    if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
+                        if (jwtUtil.validateToken(token, userDetails)) {
+                            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities()
+                            );
+
+                            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // If the token is expired or malformed, log it but DO NOT crash the filter.
+            // This allows public routes (like /api/foods) to safely pass through unauthenticated.
+            System.out.println("JWT Parsing failed: " + e.getMessage());
+        }
+
+        // Always continue the filter chain so SecurityConfig can decide to block or allow
+        filterChain.doFilter(request, response);
     }
 }
