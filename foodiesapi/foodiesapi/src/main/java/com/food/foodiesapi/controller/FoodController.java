@@ -5,12 +5,16 @@ import com.food.foodiesapi.io.FoodRequest;
 import com.food.foodiesapi.io.FoodResponse;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import software.amazon.awssdk.thirdparty.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,9 +35,20 @@ public class FoodController {
         FoodResponse response =  foodService.addFood(request , file) ;
        return response ;
     }
-    @GetMapping
+   /* @GetMapping
     public List<FoodResponse> readFoods(){
        return  foodService.readFoods() ;
+    }
+*/
+
+    @GetMapping
+    public Page<FoodResponse> readFoods(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return foodService.readFoods(pageable);
     }
 
     @GetMapping("/{id}")

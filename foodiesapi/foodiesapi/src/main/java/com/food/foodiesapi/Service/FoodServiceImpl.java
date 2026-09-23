@@ -7,6 +7,7 @@ import com.food.foodiesapi.repository.FoodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,9 @@ import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -72,11 +76,19 @@ public class FoodServiceImpl implements FoodService{
 
     }
 
-    @Override
+    /*@Override
     public List<FoodResponse> readFoods() {
         List<FoodEntity> databaseEntries = foodRepository.findAll();
         return   databaseEntries.stream().map(object -> convertToResponse(object)).toList();
 
+    }*/
+    @Override
+    public Page<FoodResponse> readFoods(Pageable pageable) {
+
+        Page<FoodEntity> databaseEntries =
+                foodRepository.findAll(pageable);
+
+        return databaseEntries.map(this::convertToResponse);
     }
 
     @Override
