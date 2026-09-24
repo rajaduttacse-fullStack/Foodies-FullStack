@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import axios from  "axios" ;
-import { fetchFoodList } from "../service/foodService";
+import { fetchFoodList } from "../service/FoodService";
 import { addToCart, getCartData, removeQtyFromCart } from "../service/cartService";
 
 

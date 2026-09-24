@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react' ;
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios" ;
-import { fetchFoodDetails } from '../../service/foodService';
+import { fetchFoodDetails } from '../../service/FoodService';
+
 import {toast} from 'react-toastify';
 import {StoreContext} from '../../context/StoreContext';
 function FoodDetails() {
