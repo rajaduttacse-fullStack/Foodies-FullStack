@@ -53,8 +53,12 @@ public class SecurityConfig {
     @Bean
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:5174" ,
-                "https://foodies-fullstack.onrender.com"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "https://foodies-fullstack.onrender.com",
+                "https://*.vercel.app" // This automatically allows all Vercel deployment URLs!
+        ));
         config.setAllowedMethods(List.of("GET", "PUT", "DELETE", "POST", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
