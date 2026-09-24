@@ -2,16 +2,16 @@ import React, { useContext } from 'react'
 import Menubar from './components/Menubar/Menubar';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Contact from './pages/Contact/Contact'; 
-import ExploreFood from './pages/ExploreFood/ExploreFood'; 
+import Contact from './pages/Contact/Contact';
+import ExploreFood from './pages/ExploreFood/ExploreFood';
 import FoodDetails from './pages/FoodDetails/FoodDetails';
 import Cart from './pages/Cart/Cart';
 import PlaceOrder from './pages/PlaceOrder/PlaceOrder';
 import Login from './components/Login/Login';
-import Register  from './components/Register/Register';
-import { ToastContainer} from 'react-toastify';
-import { StoreContext } from './context/StoreContext';
+import Register from './components/Register/Register';
 import MyOrders from './pages/MyOrders/MyOrders';
+import { ToastContainer } from 'react-toastify';
+import { StoreContext } from './context/StoreContext';
 
 function App() {
   const {token} = useContext(StoreContext);
