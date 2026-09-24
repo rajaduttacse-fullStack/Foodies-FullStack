@@ -26,6 +26,18 @@ function PlaceOrder() {
       const value = event.target.value ;
       setData(data => ({...data , [name]: value }));
     };
+
+    // Safely ensure foodList is treated as an array and quantities is defined
+    const foodArray = Array.isArray(foodList) 
+        ? foodList 
+        : (foodList?.content || foodList?.data?.content || []);
+    
+    const safeQuantities = quantities || {};
+    const cartItems = foodArray.filter(food => safeQuantities[food.id] > 0);
+
+    //calculation
+    const {subTotal , shpping , tax , total} = calculateCartTotal(cartItems , safeQuantities);
+
     const onSubmithandler = async (event) => {
       event.preventDefault();
       const orderData = {
@@ -34,7 +46,7 @@ function PlaceOrder() {
         email: data.email ,
         orderedItems: cartItems.map(item =>({
         foodId: item.id,
-        quantity: quantities[item.id],
+        quantity: safeQuantities[item.id],
         price: item.price,
         category: item.category,
         imageUrl: item.imageUrl,
@@ -52,11 +64,11 @@ function PlaceOrder() {
       }else{
         toast.error("unable to order , please try again");
       }
-      
        } catch (error) {
          toast.error("unable to order , please try again");
        }
     };
+
     const initiateRazorpayPayment = (order) =>{
       const options = {
         key: RAZORPAY_KEY ,
@@ -106,6 +118,7 @@ function PlaceOrder() {
           toast.error('Payment failed , please try again.');
         }
     };
+
     const deleteOrder = async (orderId) => {
       try {
        await axios.delete('https://foodies-fullstack.onrender.com/api/orders/'+orderId, {headers: {'Authorization': `Bearer ${token}`}});
@@ -113,6 +126,7 @@ function PlaceOrder() {
         toast.error("unable to remove the order.");
       }
     };
+
     const clearCart = async () =>{
        try {
          await axios.delete('https://foodies-fullstack.onrender.com/api/cart/clear' , {headers: {'Authorization': `Bearer ${token}`}});
@@ -122,19 +136,10 @@ function PlaceOrder() {
        }
     }
 
-    const cartItems = foodList.filter(food => quantities[food.id] > 0);
-
-
-    //calculation
-    const {subTotal , shpping , tax , total} = calculateCartTotal(cartItems , quantities);
-
-
   return (
     <div className='container mt-2'>
        <div className="py-5 text-center">
         <img className="d-block mx-auto " src={assets.logo} alt="" width="98" height="98"/>
-      
-    
       </div>
     
         <div className="row">
@@ -146,26 +151,24 @@ function PlaceOrder() {
           <ul className="list-group mb-3">
           {
             cartItems.map(item => (
-                <li   key={item.id}
+                <li  key={item.id}
                 className="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 className="my-0">{item.name}</h6>
-                <small className="text-muted">Qty:{quantities[item.id]}</small>
+                <small className="text-muted">Qty:{safeQuantities[item.id]}</small>
               </div>
-              <span className="text-muted">&#8377;{item.price*quantities[item.id]}</span>
+              <span className="text-muted">&#8377;{item.price * safeQuantities[item.id]}</span>
             </li>
             ))
           }
             <li className="list-group-item d-flex justify-content-between">
               <div>
-
                 <span >Shipping</span>
               </div>
               <span className="text-muted">{subTotal === 0 || subTotal > 1000 ? 0.0 : shpping.toFixed(2) }</span>
             </li>
             <li className="list-group-item d-flex justify-content-between">
               <div>
-               
                 <span className="text-muted">Tax (10%) </span>
               </div>
               <span className="text-muted">&#8377;{tax.toFixed(2)}</span>
@@ -176,9 +179,8 @@ function PlaceOrder() {
               <strong>&#8377;{total.toFixed(2)}</strong>
             </li>
           </ul>
-
-         
         </div>
+
         <div className="col-md-8 order-md-1">
           <h4 className="mb-3">Billing address</h4>
           <form className="needs-validation" onSubmit={onSubmithandler}>
@@ -186,12 +188,10 @@ function PlaceOrder() {
               <div className="col-md-6 mb-3">
                 <label htmlFor="firstName">First name</label>
                 <input type="text" className="form-control" id="firstName" placeholder="John"  name='firstName' onChange={onChangeHandler} value={data.firstName}  required/>
-                
               </div>
               <div className="col-md-6 mb-3">
                 <label htmlFor="lastName">Last name</label>
                 <input type="text" className="form-control" id="lastName" placeholder="Dey"  name='lastName' onChange={onChangeHandler} value={data.lastName} required/>
-                
               </div>
             </div>
 
@@ -202,22 +202,17 @@ function PlaceOrder() {
                   <span className="input-group-text">@</span>
                 </div>
                 <input type="email" className="form-control" id="email" placeholder="Email"  name='email' onChange={onChangeHandler} value={data.email} required/>
-               
               </div>
             </div>
             <div className="mb-3">
               <label htmlFor="phone">Phone Number</label>
               <input type="number" className="form-control" id="phone" placeholder="1234567890"  name='phoneNumber' onChange={onChangeHandler} value={data.phoneNumber} required/>
-             
             </div>
 
             <div className="mb-3">
               <label htmlFor="address">Address</label>
               <input type="text" className="form-control" id="address" placeholder="1234 Main St" name='address' onChange={onChangeHandler} value={data.address} required/>
-             
             </div>
-
-           
 
             <div className="row">
               <div className="col-md-5 mb-3">
@@ -226,7 +221,6 @@ function PlaceOrder() {
                   <option value="">Choose...</option>
                   <option>West Bengal</option>
                 </select>
-               
               </div>
               <div className="col-md-4 mb-3">
                 <label htmlFor="state">City</label>
@@ -234,12 +228,10 @@ function PlaceOrder() {
                   <option value="">Choose...</option>
                   <option>Kolkata</option>
                 </select>
-               
               </div>
               <div className="col-md-3 mb-3">
                 <label htmlFor="zip">Zip</label>
                 <input type="number" className="form-control" id="zip" placeholder="700137" name='zip' onChange={onChangeHandler} value={data.zip} required/>
-             
               </div>
             </div>
             <hr className="mb-4"/>
@@ -248,10 +240,8 @@ function PlaceOrder() {
           </form>
         </div>
       </div>
-    
- </div>
-
+   </div>
   );
 };
 
-export default PlaceOrder ;
+export default PlaceOrder;

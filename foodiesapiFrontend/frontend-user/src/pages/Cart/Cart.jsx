@@ -4,21 +4,21 @@ import { StoreContext } from '../../context/StoreContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateCartTotal } from '../../util/cartUtils';
 
-
 function Cart() {
+   const navigate = useNavigate();
 
-   const navigate =   useNavigate();
+   const { foodList, increaseQuantities, decreaseQuantities, quantities, removeFromCart } = useContext(StoreContext);
 
-    const {foodList , increaseQuantities , decreaseQuantities , quantities , removeFromCart}
-     = useContext(StoreContext);
-//cart Items
-    const cartItems = foodList.filter(food => quantities[food.id] > 0);
+   // Safely ensure foodList is treated as an array before filtering
+   const foodArray = Array.isArray(foodList) 
+       ? foodList 
+       : (foodList?.content || foodList?.data?.content || []);
 
+   //cart Items
+   const cartItems = foodArray.filter(food => quantities && quantities[food.id] > 0);
 
-    //calculation
-    const {subTotal , shpping , tax , total} = calculateCartTotal(cartItems , quantities);
-
- 
+   //calculation
+   const {subTotal, shpping, tax, total} = calculateCartTotal(cartItems, quantities);
 
   return (
     <div className="container py-5">
@@ -29,61 +29,40 @@ function Cart() {
       {
         cartItems.length === 0 ? (
             <p>Your Cart Is Empty.</p>
-        ) :(
-                  <div className="card mb-4">
-
+        ) : (
+                <div className="card mb-4">
                 <div className="card-body">
-
                   {
                     cartItems.map((food) =>(
                       <div key={food.id} className="row cart-item mb-3">
-
                         <div className="col-md-3">
-
                             <img src={food.imageUrl}
                             alt={food.name}
                             className="img-fluid rounded"
                             width={100}
                             />
-
                         </div>
-
                         <div className="col-md-5">
-
                             <h5 className="card-title">{food.name}</h5>
-
                             <p className="text-muted">{food.category}</p>
-
                         </div>
-
                         <div className="col-md-2">
-
                             <div className="input-group">
-
                                 <button className="btn btn-outline-secondary btn-sm" type="button"
                                 onClick={() => decreaseQuantities(food.id)}>-</button>
-
                                 <input style={{"maxWidth":"100px"}} type="text" className="form-control  form-control-sm text-center quantity-input"
                                 value={quantities[food.id]}
                                 readOnly
                                 />
-
                                 <button className="btn btn-outline-secondary btn-sm" type="button"
                                 onClick={() => increaseQuantities(food.id)}>+</button>
-
                             </div>
-
                         </div>
-
                         <div className="col-md-2 text-end">
-
-                            <p className="fw-bold">&#8377;{(food.price*quantities[food.id]).toFixed(2)}</p>
-
+                            <p className="fw-bold">&#8377;{(food.price * quantities[food.id]).toFixed(2)}</p>
                             <button className="btn btn-sm btn-outline-danger"
                              onClick={() => removeFromCart(food.id)}>
-
                                     <i className="bi bi-trash"></i>
-
                                 </button>
                         </div>
                           <hr/>
@@ -94,7 +73,7 @@ function Cart() {
             </div>
         )
      }
-        
+         
             <div className="text-start mb-4">
                 <Link to="/" className="btn btn-outline-primary">
                     <i className="bi bi-arrow-left me-2"></i>Continue Shopping
@@ -102,7 +81,7 @@ function Cart() {
             </div>
         </div>
         <div className="col-lg-4">
-         
+           
             <div className="card cart-summary">
                 <div className="card-body">
                     <h5 className="card-title mb-4">Order Summary</h5>
@@ -135,4 +114,4 @@ function Cart() {
   )
 }
 
-export default Cart ;
+export default Cart;
