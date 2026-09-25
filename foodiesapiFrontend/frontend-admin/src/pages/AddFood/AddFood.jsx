@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { assets } from "../../assets/assets";
 import axios from "axios";
 import { addFood } from "../../services/foodService";
+import { useNavigate } from "react-router-dom";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddFood = () => {
   const [image, setImage] = useState(false);
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     name: "",
@@ -30,17 +32,20 @@ const AddFood = () => {
       return;
     }
   
-    try{
-    await  addFood(data , image);
-    toast.success('Food Added Successfully');
-    setData({name: '' , description: '' , category: 'Biriyani' , price: ''});
-    setImage(null) ;
+    try {
+      await addFood(data, image);
+      toast.success('Food Added Successfully');
+      setData({ name: '', description: '', category: 'Biriyani', price: '' });
+      setImage(null);
 
-    }catch(error){
-    toast.error('Error in adding food');
+      // Redirect to list page after a brief pause for the toast
+      setTimeout(() => {
+        navigate('/List');
+      }, 1000);
+
+    } catch (error) {
+      toast.error('Error in adding food');
     }
-
-   
   };
 
   return (
