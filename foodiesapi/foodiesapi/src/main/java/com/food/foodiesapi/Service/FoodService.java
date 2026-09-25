@@ -11,8 +11,7 @@ import java.util.List;
 public interface FoodService {
     String uploadFile(MultipartFile file);
     FoodResponse addFood(FoodRequest request , MultipartFile file) ;
-    Page<FoodResponse> readFoods(Pageable pageable);
-   // List<FoodResponse> readFoods();
+    List<FoodResponse> readFoods();
     FoodResponse readFood(String id);
     boolean deleteFile(String filename);
     void deleteFood(String id);

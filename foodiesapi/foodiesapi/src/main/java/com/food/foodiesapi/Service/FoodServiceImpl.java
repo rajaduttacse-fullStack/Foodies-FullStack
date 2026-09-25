@@ -83,12 +83,9 @@ public class FoodServiceImpl implements FoodService{
 
     }*/
     @Override
-    public Page<FoodResponse> readFoods(Pageable pageable) {
-
-        Page<FoodEntity> databaseEntries =
-                foodRepository.findAll(pageable);
-
-        return databaseEntries.map(this::convertToResponse);
+    public List<FoodResponse> readFoods() {
+        List<FoodEntity> databaseEntries = foodRepository.findAll();
+        return databaseEntries.stream().map(this::convertToResponse).toList();
     }
 
     @Override

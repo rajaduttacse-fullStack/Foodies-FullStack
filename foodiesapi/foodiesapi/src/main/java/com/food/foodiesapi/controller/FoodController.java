@@ -42,13 +42,8 @@ public class FoodController {
 */
 
     @GetMapping
-    public Page<FoodResponse> readFoods(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-
-        return foodService.readFoods(pageable);
+    public List<FoodResponse> readFoods() {
+        return foodService.readFoods();
     }
 
     @GetMapping("/{id}")
